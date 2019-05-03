@@ -13,40 +13,44 @@ func client(ctx context.Context, address string) (err error) {
 	if err != nil {
 		return
 	}
+	conn, err := net.ListenUDP("udp", nil)
 
-	//LocalAddr := nil
-	// see https://golang.org/pkg/net/#DialUDP
-
-	conn, err := net.DialUDP("udp", nil, RemoteAddr)
-
-	// note : you can use net.ResolveUDPAddr for LocalAddr as well
-	//        for this tutorial simplicity sake, we will just use nil
-
+	//	conn, err := net.DialUDP("udp", nil, RemoteAddr)
 	if err != nil {
 		return
 	}
 
 	log.Printf("Established connection to %s \n", address)
-	log.Printf("Remote UDP address : %s \n", conn.RemoteAddr().String())
-	log.Printf("Local UDP client address : %s \n", conn.LocalAddr().String())
+	//	log.Printf("Remote UDP address : %s \n", conn.RemoteAddr().String())
+	//log.Printf("Local UDP client address : %s \n", conn.LocalAddr().String())
 
 	defer conn.Close()
 
 	// write a message to server
 	message := []byte("Hello UDP server!")
 
-	_, err = conn.Write(message)
+	_, err = conn.WriteToUDP(message, RemoteAddr)
 
 	if err != nil {
 		log.Println(err)
 	}
 
-	// receive message from server
 	buffer := make([]byte, 1024)
 	n, addr, err := conn.ReadFromUDP(buffer)
 
 	fmt.Println("UDP Server : ", addr)
 	fmt.Println("Received from UDP server : ", string(buffer[:n]))
+
+	peer, err := net.ResolveUDPAddr("udp", string(buffer[:n]))
+	if err != nil {
+		return
+	}
+	_, err = conn.WriteToUDP([]byte("Hello UDP peer!"), peer)
+	buffer = make([]byte, 1024)
+	n, addr, err = conn.ReadFromUDP(buffer)
+	fmt.Println("UDP Peer : ", addr)
+	fmt.Println("Received from UDP peer : ", string(buffer[:n]))
+
 	return err
 }
 
