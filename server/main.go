@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"net"
@@ -53,9 +54,16 @@ func handleUDPConnection(conn *net.UDPConn) {
 
 }
 
+var (
+	hostname = flag.String("host", "localhost", "host to listen to")
+	portnum  = flag.String("port", "6000", "port to listen to")
+)
+
 func main() {
-	hostName := "localhost"
-	portNum := "6000"
+	flag.Parse()
+
+	hostName := *hostname
+	portNum := *portnum
 	service := hostName + ":" + portNum
 	clientStorage = make(map[string]*net.UDPAddr)
 
@@ -65,7 +73,6 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// setup listener for incoming UDP connection
 	ln, err := net.ListenUDP("udp", udpAddr)
 
 	if err != nil {
@@ -77,7 +84,6 @@ func main() {
 	defer ln.Close()
 
 	for {
-		// wait for UDP client to connect
 		handleUDPConnection(ln)
 	}
 
