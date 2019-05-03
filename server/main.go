@@ -9,12 +9,10 @@ import (
 var clientStorage map[string]*net.UDPAddr
 
 func storeClient(client *net.UDPAddr, idSession string) {
-
 	clientStorage[idSession] = client
 }
 
 func matchClient(conn *net.UDPConn, client *net.UDPAddr, friendlyPeer *net.UDPAddr) {
-
 	message := []byte(friendlyPeer.String())
 	_, err := conn.WriteToUDP(message, client)
 	if err != nil {
@@ -35,10 +33,6 @@ func checkForFriend(conn *net.UDPConn, client *net.UDPAddr, idSession string) {
 }
 
 func handleUDPConnection(conn *net.UDPConn) {
-	clientStorage = make(map[string]*net.UDPAddr)
-
-	// here is where you want to do stuff like read or write to client
-
 	buffer := make([]byte, 1024)
 
 	n, addr, err := conn.ReadFromUDP(buffer)
@@ -51,10 +45,7 @@ func handleUDPConnection(conn *net.UDPConn) {
 	}
 
 	idSession := string(buffer[:n])
-	storeClient(addr, idSession)
-	/*	message := []byte("Hello UDP client!")
-		_, err = conn.WriteToUDP(message, addr)
-	*/
+	checkForFriend(conn, addr, idSession)
 
 	if err != nil {
 		log.Println(err)
@@ -66,6 +57,7 @@ func main() {
 	hostName := "localhost"
 	portNum := "6000"
 	service := hostName + ":" + portNum
+	clientStorage = make(map[string]*net.UDPAddr)
 
 	udpAddr, err := net.ResolveUDPAddr("udp4", service)
 
