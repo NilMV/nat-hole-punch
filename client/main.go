@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"log"
 	"net"
@@ -54,9 +55,16 @@ func client(ctx context.Context, address string) (err error) {
 	return err
 }
 
+var (
+	hostname = flag.String("host", "localhost", "host to listen to")
+	portnum  = flag.String("port", "6000", "port to listen to")
+)
+
 func main() {
-	hostName := "localhost"
-	portNum := "6000"
+	flag.Parse()
+
+	hostName := *hostname
+	portNum := *portnum
 
 	address := hostName + ":" + portNum
 	ctx := context.Background()
