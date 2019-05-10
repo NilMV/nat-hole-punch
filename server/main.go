@@ -67,7 +67,7 @@ func main() {
 	service := hostName + ":" + portNum
 	clientStorage = make(map[string]*net.UDPAddr)
 
-	udpAddr, err := net.ResolveUDPAddr("udp4", service)
+	udpAddr, err := net.ResolveUDPAddr("udp", service)
 
 	if err != nil {
 		log.Fatal(err)
