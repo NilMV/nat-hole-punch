@@ -127,7 +127,6 @@ var (
 
 func main() {
 	flag.Parse()
-
 	hostName := *hostname
 	portNum := *portnum
 
