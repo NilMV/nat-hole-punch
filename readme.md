@@ -12,3 +12,6 @@ https://github.com/coturn/coturn/tree/master/examples/scripts
 https://github.com/node/turn-client
 
 https://github.com/coturn/coturn/wiki/turnutils_uclient
+
+https://stackoverflow.com/questions/26840514/how-to-send-a-udp-packet-via-public-ip-through-nat
+
