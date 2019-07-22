@@ -64,7 +64,9 @@ func server() {
 	log.Println("Public IP:", stunnedPublicIP())
 
 	defer updLn.Close()
+
 	for {
+		stunnedPublicIP()
 		n, addr, err := updLn.ReadFromUDP(buf)
 		if err != nil {
 			log.Fatalln(err)
@@ -75,7 +77,6 @@ func server() {
 
 		go func() {
 			log.Printf("Reciving data: %s from %s", string(buf[:n]), addr.String())
-
 			log.Printf("Sending data..")
 			updLn.WriteTo([]byte("Pong"), addr)
 			log.Printf("Complete Sending data..")

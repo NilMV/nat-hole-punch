@@ -69,26 +69,25 @@ func client(hostname string, portnum int) {
 	log.Println("Public IP:", stunnedPublicIP())
 
 	defer conn.Close()
-
-	n, err := conn.Write([]byte("Ping"))
-	if err != nil {
-		log.Fatalln(err)
-		os.Exit(1)
-	}
-	buf := make([]byte, 1024)
-	if len(buf) != n {
-		log.Printf("data size is %d, but sent data size is %d", len(buf), n)
-	}
-
 	recvBuf := make([]byte, 1024)
 
-	n, err = conn.Read(recvBuf)
-	if err != nil {
-		log.Fatalln(err)
-		os.Exit(1)
+	for i := 0; i < 99; i++ {
+		n, err := conn.Write([]byte("Ping"))
+		if err != nil {
+			log.Println(err)
+			continue
+		}
+		if len(recvBuf) != n {
+			log.Printf("data size is %d, but sent data size is %d", len(recvBuf), n)
+		}
+		log.Println("sent")
+		n, err = conn.Read(recvBuf)
+		if err != nil {
+			log.Println(err)
+			continue
+		}
+		log.Printf("Received data: %s", string(recvBuf[:n]))
 	}
-
-	log.Printf("Received data: %s", string(recvBuf[:n]))
 }
 
 func main() {
