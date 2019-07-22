@@ -44,14 +44,28 @@ var (
 	portnum  = flag.Int("port", 6000, "port to listen to")
 )
 
-func client(address string) {
-	conn, err := net.Dial("udp4", address)
+func client(hostname string, portnum int) {
+	localAddr, err := net.ResolveUDPAddr("udp", "0.0.0.0:7070")
+	if err != nil {
+		log.Fatalln(err)
+		os.Exit(1)
+	}
+
+	RemoteEP := net.UDPAddr{IP: net.ParseIP(hostname), Port: portnum}
+	if err != nil {
+		log.Fatalln(err)
+		os.Exit(1)
+	}
+
+	conn, err := net.DialUDP("udp", localAddr, &RemoteEP)
 	if err != nil {
 		log.Fatalln(err)
 		os.Exit(1)
 	}
 
 	log.Println("Local IP:", conn.LocalAddr())
+	log.Println("Remote IP:", conn.RemoteAddr())
+
 	log.Println("Public IP:", stunnedPublicIP())
 
 	defer conn.Close()
@@ -82,7 +96,7 @@ func main() {
 	hostName := *hostname
 	portNum := *portnum
 
-	address := hostName + ":" + strconv.Itoa(portNum)
+	//address := hostName + ":" + strconv.Itoa(portNum)
 
-	client(address)
+	client(hostName, portNum)
 }

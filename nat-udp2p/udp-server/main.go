@@ -44,9 +44,14 @@ var (
 	portnum  = flag.Int("port", 6000, "port to listen to")
 )
 
-func server(address *net.UDPAddr) {
-	updLn, err := net.ListenUDP("udp4", address)
+func server() {
+	ServerAddr, err := net.ResolveUDPAddr("udp", "0.0.0.0:6000")
+	if err != nil {
+		log.Fatalln(err)
+		os.Exit(1)
+	}
 
+	updLn, err := net.ListenUDP("udp", ServerAddr)
 	if err != nil {
 		log.Fatalln(err)
 		os.Exit(1)
@@ -54,17 +59,19 @@ func server(address *net.UDPAddr) {
 
 	buf := make([]byte, 1024)
 	log.Println("Starting udp server...")
-
 	log.Println("Remote addr:", updLn.LocalAddr().String())
 	log.Println("Local IP:", updLn.LocalAddr())
 	log.Println("Public IP:", stunnedPublicIP())
 
+	defer updLn.Close()
 	for {
 		n, addr, err := updLn.ReadFromUDP(buf)
 		if err != nil {
 			log.Fatalln(err)
 			os.Exit(1)
 		}
+
+		log.Println(addr.String())
 
 		go func() {
 			log.Printf("Reciving data: %s from %s", string(buf[:n]), addr.String())
@@ -78,16 +85,13 @@ func server(address *net.UDPAddr) {
 
 func main() {
 	flag.Parse()
-	hostName := *hostname
-	portNum := *portnum
+	//	hostName := *hostname
+	//portNum := *portnum
 
 	//	address := hostName + ":" + portNum
 	//ctx := context.Background()
-	udpAddr := &net.UDPAddr{
-		IP:   net.ParseIP(hostName),
-		Port: portNum,
-	}
-	server(udpAddr)
+
+	server()
 	/*
 		err := client(ctx, address)
 		if err != nil {
