@@ -45,7 +45,7 @@ var (
 )
 
 func client(address string) {
-	conn, err := net.Dial("udp", address)
+	conn, err := net.Dial("udp4", address)
 	if err != nil {
 		log.Fatalln(err)
 		os.Exit(1)

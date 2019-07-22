@@ -45,7 +45,7 @@ var (
 )
 
 func server(address *net.UDPAddr) {
-	updLn, err := net.ListenUDP("udp", address)
+	updLn, err := net.ListenUDP("udp4", address)
 
 	if err != nil {
 		log.Fatalln(err)
@@ -55,6 +55,7 @@ func server(address *net.UDPAddr) {
 	buf := make([]byte, 1024)
 	log.Println("Starting udp server...")
 
+	log.Println("Remote addr:", updLn.LocalAddr().String())
 	log.Println("Local IP:", updLn.LocalAddr())
 	log.Println("Public IP:", stunnedPublicIP())
 
