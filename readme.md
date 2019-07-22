@@ -15,3 +15,5 @@ https://github.com/coturn/coturn/wiki/turnutils_uclient
 
 https://stackoverflow.com/questions/26840514/how-to-send-a-udp-packet-via-public-ip-through-nat
 
+https://jan.newmarch.name/go/socket/chapter-socket.html
+https://stackoverflow.com/questions/8523330/programming-p2p-application/8524609#8524609

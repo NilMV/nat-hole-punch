@@ -66,7 +66,6 @@ func server() {
 	defer updLn.Close()
 
 	for {
-		stunnedPublicIP()
 		n, addr, err := updLn.ReadFromUDP(buf)
 		if err != nil {
 			log.Fatalln(err)

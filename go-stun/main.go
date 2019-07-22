@@ -8,8 +8,11 @@ import (
 
 func main() {
 	s := stun.NewClient()
-	s.SetServerAddr("stun.l.google.com:19302")
+	s.SetServerAddr("stun.stunprotocol.org:3478")
 	//	s.SetVerbose(true)
-	nat, host, _ := s.Discover()
-	fmt.Print(nat, host)
+
+	for i := 0; i < 99; i++ {
+		nat, host, _ := s.Discover()
+		fmt.Println(nat, host)
+	}
 }

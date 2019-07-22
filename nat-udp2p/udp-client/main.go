@@ -21,6 +21,7 @@ func stunnedPublicIP() string {
 	// Building binding request with random transaction id.
 	message := stun.MustBuild(stun.TransactionID, stun.BindingRequest)
 	// Sending request to STUN server, waiting for response message.
+
 	if err := c.Do(message, func(res stun.Event) {
 		if res.Error != nil {
 			panic(res.Error)
@@ -45,6 +46,7 @@ var (
 )
 
 func client(hostname string, portnum int) {
+
 	localAddr, err := net.ResolveUDPAddr("udp", "0.0.0.0:7070")
 	if err != nil {
 		log.Fatalln(err)
